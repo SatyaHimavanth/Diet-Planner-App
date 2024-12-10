@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp">
+
+    <GridLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        android:background="#f0f0f0"
+        android:columnCount="9">
+
+        <!-- Date Column -->
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="#000000"
+            android:gravity="center_vertical|center_horizontal"
+            android:padding="4dp"
+            android:background="#dcdcdc" />
+
+        <!-- Other columns (Breakfast, Lunch, Snacks, etc.) -->
+        <TextView
+            android:id="@+id/breakfast"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="#000000"
+            android:gravity="center_vertical|center_horizontal"
+            android:padding="4dp"
+            android:background="#dcdcdc" />
+        <!-- Repeat for other columns like Lunch, Snacks, Dinner, etc. -->
+
+        <TextView
+            android:id="@+id/lunch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="#000000"
+            android:gravity="center_vertical|center_horizontal"
+            android:padding="4dp"
+            android:background="#dcdcdc" />
+
+        <TextView
+            android:id="@+id/snacks"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="#000000"
+            android:gravity="center_vertical|center_horizontal"
+            android:padding="4dp"
+            android:background="#dcdcdc" />
+
+        <TextView
+            android:id="@+id/dinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="#000000"
+            android:gravity="center_vertical|center_horizontal"
+            android:padding="4dp"
+            android:background="#dcdcdc" />
+
+        <TextView
+            android:id="@+id/total_calories"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="#000000"
+            android:gravity="center_vertical|center_horizontal"
+            android:padding="4dp"
+            android:background="#dcdcdc" />
+
+        <TextView
+            android:id="@+id/total_carbs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="#000000"
+            android:gravity="center_vertical|center_horizontal"
+            android:padding="4dp"
+            android:background="#dcdcdc" />
+
+        <TextView
+            android:id="@+id/total_proteins"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="#000000"
+            android:gravity="center_vertical|center_horizontal"
+            android:padding="4dp"
+            android:background="#dcdcdc" />
+
+        <TextView
+            android:id="@+id/total_fats"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="#000000"
+            android:gravity="center_vertical|center_horizontal"
+            android:padding="4dp"
+            android:background="#dcdcdc" />
+
+    </GridLayout>
+</HorizontalScrollView>

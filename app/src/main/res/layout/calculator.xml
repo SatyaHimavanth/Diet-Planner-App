@@ -1,0 +1,183 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select Food Items"
+            android:textSize="24sp"
+            android:layout_gravity="center"
+            android:padding="10dp" />
+
+        <!-- Breakfast Section -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Breakfast"
+            android:textSize="18sp"
+            android:padding="8dp" />
+
+        <AutoCompleteTextView
+            android:id="@+id/breakfast_input"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Type to search food..."
+            android:inputType="text" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/breakfast_chip_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:padding="4dp" />
+
+        <!-- Lunch Section -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lunch"
+            android:textSize="18sp"
+            android:padding="8dp" />
+
+        <AutoCompleteTextView
+            android:id="@+id/lunch_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Type to search food..."
+            android:inputType="text" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/lunch_chip_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:padding="4dp" />
+
+        <!-- Snacks Section -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Snacks"
+            android:textSize="18sp"
+            android:padding="8dp" />
+
+        <AutoCompleteTextView
+            android:id="@+id/snacks_input"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Type to search food..."
+            android:inputType="text" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/snacks_chip_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:padding="4dp" />
+
+        <!-- Dinner Section -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dinner"
+            android:textSize="18sp"
+            android:padding="8dp" />
+
+        <AutoCompleteTextView
+            android:id="@+id/dinner_input"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Type to search food..."
+            android:inputType="text" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/dinner_chip_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:padding="4dp" />
+
+        <!-- Totals Section -->
+        <LinearLayout
+            android:id="@+id/totalsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="8dp" />
+
+        <Button
+            android:id="@+id/submit_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Submit"
+            android:layout_marginTop="16dp" />
+
+        <!-- New Form Section with 2 Text Edits and Labels -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="BMI Cal"
+            android:layout_gravity="center"
+            android:textSize="20sp"
+            android:layout_marginTop="16dp"
+            android:padding="8dp" />
+
+        <!-- First Text Edit with Label -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Enter Weght"
+            android:textSize="16sp"
+            android:padding="8dp" />
+
+        <EditText
+            android:id="@+id/weight"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Eg: 60.5"
+            android:inputType="numberDecimal" />
+
+        <!-- Second Text Edit with Label -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Enter Height"
+            android:textSize="16sp"
+            android:padding="8dp" />
+
+        <EditText
+            android:id="@+id/height"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Eg: 170 cm"
+            android:inputType="number" />
+
+        <!-- BMI value Section -->
+        <LinearLayout
+            android:id="@+id/bmisLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="8dp" />
+
+        <!-- Submit Button for the BMI -->
+        <Button
+            android:id="@+id/form_submit_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Submit Form"
+            android:layout_marginTop="16dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="60dp"/>
+
+    </LinearLayout>
+</ScrollView>

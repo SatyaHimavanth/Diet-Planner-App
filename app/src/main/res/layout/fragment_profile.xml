@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.notifications.NotificationsFragment">
+
+    <!-- Root LinearLayout to allow multiple child elements inside ScrollView -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- User Information Section -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- First Row: Name and Image -->
+            <LinearLayout
+                android:id="@+id/user_info_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical|center_horizontal">
+
+                <!-- User Name -->
+                <TextView
+                    android:id="@+id/userName"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:text="John Doe"
+                    android:textSize="30sp"
+                    android:paddingRight="20dp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:textStyle="bold"/>
+
+                <!-- ImageView to display uploaded image -->
+                <ImageView
+                    android:id="@+id/userImage"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_centerHorizontal="true"
+                    android:src="@drawable/baseline_person"
+                    android:background="@drawable/rounded_image"
+                    />
+
+                <Button
+                    android:id="@+id/editProfile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:text="Edit"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"/>
+
+            </LinearLayout>
+
+            <!-- Second Row: Height, Weight, and Age -->
+            <GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/user_info_layout"
+                android:layout_marginTop="10dp"
+                android:columnCount="3"
+                android:padding="8dp"
+                android:orientation="horizontal"
+                android:rowCount="1">
+
+                <!-- Height -->
+                <TextView
+                    android:id="@+id/userHeight"
+                    android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Height: 175 cm"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="1" /> <!-- Distribute space equally -->
+
+                <!-- Weight -->
+                <TextView
+                    android:id="@+id/userWeight"
+                    android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Weight: 70 kg"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="1" />
+
+                <!-- Age -->
+                <TextView
+                    android:id="@+id/userAge"
+                    android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Age: 28"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="1" />
+
+            </GridLayout>
+
+
+        </RelativeLayout>
+
+        <!-- Main Content Section -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/exportHeading"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Export Data"
+                android:layout_marginTop="20dp"
+                android:textAlignment="center"
+                android:textSize="20sp" />
+
+            <!-- Export BMI Button -->
+            <GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:rowCount="2"
+                android:columnCount="1"
+                android:foregroundGravity="center_vertical|center_horizontal"
+                android:id="@+id/export_gridlayout">
+
+                <Button
+                    android:id="@+id/btn_export_meals"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="50dp"
+                    android:background="@drawable/rounded_button"
+                    android:layout_columnWeight="1"
+                    android:text="Export Meals" />
+
+                <Button
+                    android:id="@+id/btn_export_bmi"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rounded_button"
+                    android:layout_marginTop="10dp"
+                    android:layout_columnWeight="1"
+                    android:text="Export BMI" />
+            </GridLayout>
+
+        </RelativeLayout>
+    </LinearLayout>
+</ScrollView>

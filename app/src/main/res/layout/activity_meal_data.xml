@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp"
+    android:scrollbars="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Meal Data"
+            android:textSize="24sp"
+            android:layout_gravity="center"
+            android:padding="10dp" />
+
+        <!-- Meal List (No ScrollView here, ListView handles scrolling) -->
+        <ListView
+            android:id="@+id/meal_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="BMI Data"
+            android:textSize="24sp"
+            android:layout_gravity="center"
+            android:padding="10dp" />
+
+        <!-- BMI List (Same, ListView handles scrolling) -->
+        <ListView
+            android:id="@+id/bmi_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+</ScrollView>
