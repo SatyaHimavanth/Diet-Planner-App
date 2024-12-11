@@ -26,7 +26,7 @@ public class SplashActivity extends AppCompatActivity {
     private SharedPreferences prefs;
     private String currentDate;
     private String LastLoggedIn;
-
+    private HashMap<String, Object> userData;
     private DatabaseHelper dbHelper;
 
     @Override
@@ -34,41 +34,19 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
 
-        HashMap<String, Object> userData = new HashMap<>();
-        HashMap<String, Object> UserRow;
+        HashMap<String, Object> putUserData = new HashMap<String, Object>();
 
-        userData.put("username", "PubFit");
-        userData.put("password", "PubFit");
-        userData.put("adminUser", "PubFitAdmin");
-        userData.put("adminPassword", "SecretAdminPassword");
-        userData.put("LastLogin", 5.0);
+        putUserData.put("adminUser", "PubFitAdmin");
+        putUserData.put("adminPassword", "SecretAdminPassword");
 
         // Call the method to insert data
         dbHelper = new DatabaseHelper(this);
-        dbHelper.insertUserData(userData);
-
-        UserRow = dbHelper.getUserData();
+        dbHelper.insertUserData(putUserData);
+        userData = dbHelper.getUserData();
         dbHelper.close();
 
-        for (String key : UserRow.keySet()) {
+        for (String key : userData.keySet()) {
             Log.d("SplashActivity", key + ": " + userData.get(key));
-        }
-        // Access SharedPreferences
-        prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-
-        Map<String, ?> allEntries = prefs.getAll();
-        Log.d("SplashActivity", "Printing all shared preferences");
-        for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
-            Log.d("SharedPreferences", entry.getKey() + ": " + entry.getValue().toString());
-        }
-
-        while(true){
-            updateUserData();
-            String username = prefs.getString(KEY_USERNAME, null);
-            String password = prefs.getString(KEY_PASSWORD, null);
-            if(!username.isEmpty() && username != null && !password.isEmpty() && password != null){
-                break;
-            }
         }
 
         Intent intent;
@@ -89,7 +67,7 @@ public class SplashActivity extends AppCompatActivity {
         boolean login_condition = false;
 
         currentDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
-        LastLoggedIn = prefs.getString(KEY_LAST_LOGGED_IN, null);
+        LastLoggedIn = (String) userData.get("LastLogin");
         // Create a SimpleDateFormat object
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
@@ -109,37 +87,5 @@ public class SplashActivity extends AppCompatActivity {
             Log.d("SplashActivity", "Error in getting Login date!");
         }
         return login_condition;
-    }
-    private void updateUserData(){
-        SharedPreferences.Editor editor = prefs.edit();
-
-        // initially clear the prefs
-//        editor.clear();
-//        editor.commit();
-
-        // Set default admin credentials if not already set
-        editor.putString("adminUsername", DEFAULT_ADMIN_USERNAME);
-        editor.commit();
-        editor.putString("adminPassword", DEFAULT_ADMIN_PASSWORD);
-        editor.commit();
-
-        String username = prefs.getString(KEY_USERNAME, null);
-        String password = prefs.getString(KEY_PASSWORD, null);
-        String lastLogin = prefs.getString(KEY_LAST_LOGGED_IN, null);
-
-        if (username==null || username.isEmpty()){
-            editor.putString("username", "PubFit");
-            editor.commit();
-        }
-
-        if (password==null || password.isEmpty()){
-            editor.putString("password", "PubFit");
-            editor.commit();
-        }
-
-        if (lastLogin==null || lastLogin.isEmpty()){
-            editor.putString(KEY_LAST_LOGGED_IN, "2000-01-01");
-            editor.commit();
-        }
     }
 }

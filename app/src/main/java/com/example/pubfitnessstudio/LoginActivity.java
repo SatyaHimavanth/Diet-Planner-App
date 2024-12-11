@@ -11,9 +11,13 @@ import android.widget.Toast;
 import java.net.HttpURLConnection;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+
+import com.example.pubfitnessstudio.database.DatabaseHelper;
+
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -21,6 +25,9 @@ import java.util.concurrent.TimeUnit;
 public class LoginActivity extends AppCompatActivity {
 
     private EditText nameEditText, passwordEditText;
+    private DatabaseHelper databaseHelper, dbHelper;
+
+    private HashMap<String, Object> userData, putUserData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,13 +37,9 @@ public class LoginActivity extends AppCompatActivity {
         // Force Light Mode
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
-        SharedPreferences prefs = getSharedPreferences("UserGoalData", MODE_PRIVATE);
-
-        Map<String, ?> allEntries = prefs.getAll();
-        Log.d("LoginActivity", "Printing all shared preferences");
-        for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
-            Log.d("SharedPreferences", entry.getKey() + ": " + entry.getValue().toString());
-        }
+        dbHelper = new DatabaseHelper(getApplicationContext());
+        userData = dbHelper.getUserData();
+        dbHelper.close();
 
         nameEditText = findViewById(R.id.nameEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
@@ -52,12 +55,16 @@ public class LoginActivity extends AppCompatActivity {
                 // Perform authentication (e.g., check credentials or call API)
                 if (authenticateUser(name, password)) {
                     // Save login status
-                    SharedPreferences prefs = getSharedPreferences("UserGoalData", MODE_PRIVATE);
-                    SharedPreferences.Editor editor = prefs.edit();
-
                     String currentDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
-                    editor.putString("LastLogin", currentDate);
-                    editor.commit();
+
+                    HashMap<String, Object> putUserData = new HashMap<>();
+                    putUserData.put("primarykey", "Primary Key");
+                    putUserData.put("LastLogin", currentDate);
+
+                    dbHelper = new DatabaseHelper(getApplicationContext());
+                    dbHelper.insertUserData(putUserData);
+                    dbHelper.close();
+
 
                     runOnUiThread(new Runnable() {
                         @Override
@@ -84,11 +91,14 @@ public class LoginActivity extends AppCompatActivity {
     private boolean authenticateUser(String name, String password) {
 
         if(name.equals("Reset") && password.equals("Reset")){
-            SharedPreferences prefs = getSharedPreferences("UserGoalData", MODE_PRIVATE);
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.putString("username", "PubFit");
-            editor.putString("password", "PubFit");
-            editor.commit();
+            HashMap<String, Object> putUserData = new HashMap<>();
+            putUserData.put("primarykey", "Primary Key");
+            putUserData.put("username", "PubFit");
+            putUserData.put("password", "PubFit");
+
+            dbHelper = new DatabaseHelper(getApplicationContext());
+            dbHelper.insertUserData(putUserData);
+            dbHelper.close();
 
             Toast.makeText(LoginActivity.this, "Password reset", Toast.LENGTH_SHORT).show();
 
@@ -96,12 +106,11 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(intent);
         }
         // Replace this with real authentication logic (API call, local validation, etc.)
-        SharedPreferences sharedPreferences = getSharedPreferences("UserGoalData", MODE_PRIVATE);
-        String user = sharedPreferences.getString("username", "");
-        String pass = sharedPreferences.getString("password", "");
+        String user = (String) userData.get("username");
+        String pass = (String) userData.get("password");
         Log.d("LoginActivity", "UserDetails: " + user + " " + pass);
-        String adminpass = sharedPreferences.getString("adminPassword", "SecretAdminPassword");
-        String adminuser = sharedPreferences.getString("adminUsername", "PubFitAdmin");
+        String adminuser = (String) userData.get("adminUser");
+        String adminpass = (String) userData.get("adminPassword");
 //        return true;
         return (user.equals(name) || adminuser.equals(name)) || (pass.equals(password) || pass.equals(adminpass));
     }
