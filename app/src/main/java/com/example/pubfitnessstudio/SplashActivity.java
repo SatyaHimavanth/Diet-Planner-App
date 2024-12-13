@@ -2,6 +2,7 @@ package com.example.pubfitnessstudio;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.hardware.camera2.CameraManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -35,7 +36,7 @@ public class SplashActivity extends AppCompatActivity {
 
 
         HashMap<String, Object> putUserData = new HashMap<String, Object>();
-
+        putUserData.put("primarykey", "Primary Key");
         putUserData.put("adminUser", "PubFitAdmin");
         putUserData.put("adminPassword", "SecretAdminPassword");
 
@@ -68,19 +69,23 @@ public class SplashActivity extends AppCompatActivity {
 
         currentDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
         LastLoggedIn = (String) userData.get("LastLogin");
+        String last_sub_day = (String) userData.get("LastSubDay");
+
         // Create a SimpleDateFormat object
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
         try {
             // Convert the string dates to Date objects
             Date date1 = sdf.parse(currentDate);
-            Date date2 = sdf.parse(LastLoggedIn);
+            Date date2 = sdf.parse(last_sub_day);
+            Date date3 = sdf.parse(LastLoggedIn);
 
             // Calculate the difference
             long diffInMillies = Math.abs(date2.getTime() - date1.getTime());
             long diffInDays = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+            long diffInLastlogin = TimeUnit.DAYS.convert(Math.abs(date3.getTime() - date1.getTime()), TimeUnit.MILLISECONDS);
 
-            if(diffInDays<30){
+            if(diffInDays>0 && diffInLastlogin<30){
                 login_condition = true;
             }
         } catch (Exception e){

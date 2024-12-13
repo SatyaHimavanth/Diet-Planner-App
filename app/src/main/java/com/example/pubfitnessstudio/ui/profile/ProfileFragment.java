@@ -9,6 +9,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.time.Period;
 import com.example.pubfitnessstudio.EditUserData;
 import com.example.pubfitnessstudio.R;
@@ -74,6 +79,81 @@ public class ProfileFragment extends Fragment {
         exportMealsButton.setOnClickListener(v -> exporter.exportMealsToExcel());
 
         exportBmiButton.setOnClickListener(v -> exporter.exportBMIsToExcel());
+
+        Button save_db = view.findViewById(R.id.btn_save_data);
+        save_db.setOnClickListener(v -> {
+            File databaseFile = getActivity().getDatabasePath("fitness_db.db");
+
+            File backupDir = getActivity().getExternalFilesDir(null);
+            if (backupDir == null) {
+                return;
+            }
+
+            File backupFile = new File(backupDir, "fitness_db.db");
+
+            InputStream inputStream = null;
+            OutputStream outputStream = null;
+            try {
+                // Open both the database file and backup file streams
+                inputStream = new FileInputStream(databaseFile);
+                outputStream = new FileOutputStream(backupFile);
+
+                // Copy the database to external storage
+                byte[] buffer = new byte[1024];
+                int length;
+                while ((length = inputStream.read(buffer)) > 0) {
+                    outputStream.write(buffer, 0, length);
+                }
+
+                // Close streams
+                inputStream.close();
+                outputStream.close();
+                Toast.makeText(getActivity(), "Saved data to phone", Toast.LENGTH_SHORT).show();
+
+            } catch (IOException e) {
+                Toast.makeText(getActivity(), "Error in saving data", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        Button import_db = view.findViewById(R.id.btn_import_data);
+        import_db.setOnClickListener(v -> {
+            File backupDir = getActivity().getExternalFilesDir(null); // You can specify a subdirectory, e.g., "backups"
+            if (backupDir == null) {
+                return;
+            }
+
+            // Specify the backup file location within the app's external files directory
+            File backupFile = new File(backupDir, "fitness_db.db");
+
+            // Get the path of your internal database file
+            File databaseFile = getActivity().getDatabasePath("fitness_db.db");
+
+            // Check if the backup exists
+            if (backupFile.exists()) {
+                try {
+                    // Open the backup file and the internal database file streams
+                    InputStream inputStream = new FileInputStream(backupFile);
+                    OutputStream outputStream = new FileOutputStream(databaseFile);
+
+                    // Copy the backup file to internal storage
+                    byte[] buffer = new byte[1024];
+                    int length;
+                    while ((length = inputStream.read(buffer)) > 0) {
+                        outputStream.write(buffer, 0, length);
+                    }
+
+                    // Close streams
+                    inputStream.close();
+                    outputStream.close();
+                    Toast.makeText(getActivity(), "Data imported successfully", Toast.LENGTH_SHORT).show();
+
+                } catch (IOException e) {
+                    Toast.makeText(getActivity(), "Error in importing data", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(getActivity(), "No backup file found", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         return view;
     }

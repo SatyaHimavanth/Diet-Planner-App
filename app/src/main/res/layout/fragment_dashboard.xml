@@ -12,6 +12,7 @@
             android:layout_height="wrap_content"
             android:text="Calorie Calculator"
             android:textSize="24sp"
+            android:textStyle="bold"
             android:layout_gravity="center"
             android:padding="10dp" />
 
@@ -133,7 +134,8 @@
             android:layout_height="wrap_content"
             android:text="Water Consumption"
             android:layout_gravity="center"
-            android:textSize="20sp"
+            android:textSize="24sp"
+            android:textStyle="bold"
             android:layout_marginTop="16dp"
             android:padding="8dp" />
 
@@ -188,76 +190,174 @@
 
         </GridLayout>
 
-
-        <!-- New Form Section with 2 Text Edits and Labels -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="BMI Calculator"
+            android:text="Report"
             android:layout_gravity="center"
-            android:textSize="20sp"
+            android:textSize="24sp"
+            android:textStyle="bold"
             android:layout_marginTop="16dp"
             android:padding="8dp" />
 
-        <!-- First Text Edit with Label -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Enter Weght"
-            android:textSize="16sp"
-            android:padding="8dp" />
-
-        <EditText
-            android:id="@+id/weight"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:hint="Eg: 60.5"
-            android:inputType="number" />
-
-        <!-- Second Text Edit with Label -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Enter Height"
-            android:textSize="16sp"
-            android:padding="8dp" />
-
-        <EditText
-            android:id="@+id/height"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Eg: 170 cm"
-            android:inputType="number" />
-
-        <!-- BMI value Section -->
         <LinearLayout
-            android:id="@+id/bmisLayout"
+            android:id="@+id/reportLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="8dp" />
 
-        <!-- Submit Button for the BMI -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:gravity="center">
-            <Button
-                android:id="@+id/form_submit_button"
-                android:layout_width="200dp"
+            android:padding="16dp">
+
+            <!-- Row 1 -->
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Submit BMI data"
-                android:background="@drawable/rounded_button"
-                android:layout_marginTop="16dp"/>
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="BMI" />
+
+                <TextView
+                    android:id="@+id/bmi"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="BMI value" />
+            </LinearLayout>
+
+            <!-- Row 2 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="BMR" />
+
+                <TextView
+                    android:id="@+id/bmr"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="BMR value" />
+            </LinearLayout>
+
+            <!-- Row 3 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Fat  (%)" />
+
+                <TextView
+                    android:id="@+id/fp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Fat (%) value" />
+            </LinearLayout>
+
+            <!-- Row 4 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Total Body Water" />
+
+                <TextView
+                    android:id="@+id/tbw"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="TBW value" />
+            </LinearLayout>
+
+            <!-- Row 5 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Protein Mass" />
+
+                <TextView
+                    android:id="@+id/pm"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="PM value" />
+            </LinearLayout>
+
+            <!-- Row 6 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Bone Mineral Content" />
+
+                <TextView
+                    android:id="@+id/bcm"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="BCM value" />
+            </LinearLayout>
 
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/bmi_scale"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:contentDescription="BMI Scale" />
+<!--        <ImageView-->
+<!--            android:id="@+id/bmi_scale"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="200dp"-->
+<!--            android:contentDescription="BMI Scale" />-->
 
 
         <!-- BMR Calculator -->

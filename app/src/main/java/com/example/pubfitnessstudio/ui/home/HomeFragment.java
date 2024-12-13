@@ -16,15 +16,21 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.io.File;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 import androidx.fragment.app.Fragment;
+
+import com.example.pubfitnessstudio.DeviceUtil;
+import com.example.pubfitnessstudio.LoginRequest;
 import com.example.pubfitnessstudio.R;
 import com.example.pubfitnessstudio.database.DatabaseHelper;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 public class HomeFragment extends Fragment {
     private DatabaseHelper databaseHelper, dbHelper;
@@ -37,7 +43,7 @@ public class HomeFragment extends Fragment {
     private EditText editText;
     private TextView unitTextView;
     private Button submitButton;
-
+    private boolean hasFunctionExecuted = false, subscribed = false;
     private HashMap<String, Object> userData;
 
     @Override
@@ -49,6 +55,7 @@ public class HomeFragment extends Fragment {
         goalProteinsText = rootView.findViewById(R.id.goalProteins_text);
         goalFatsText = rootView.findViewById(R.id.goalFats_text);
 
+    
         loadUserData();
 
         for (String key : userData.keySet()) {
@@ -217,6 +224,50 @@ public class HomeFragment extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // Check if the function has already been executed
+        if (!hasFunctionExecuted) {
+
+            loadUserData();
+            boolean flag = checkSub();
+
+            String currentDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+            String last_sub_day = (String) userData.get("LastSubDay");
+
+            try{
+                Date date1 = sdf.parse(currentDate);
+                Date date2 = sdf.parse(last_sub_day);
+                long diffInLastlogin = TimeUnit.DAYS.convert(Math.abs(date2.getTime() - date1.getTime()), TimeUnit.MILLISECONDS);
+
+                if(diffInLastlogin<7){
+                    Toast.makeText(getActivity(), "Last " + String.valueOf(diffInLastlogin) + " days left!", Toast.LENGTH_SHORT).show();
+                }
+            } catch (ParseException e) {
+                int x = 0;
+            }
+            if (flag) {
+                HashMap<String, Object> putUserData = new HashMap<>();
+                putUserData.put("primarykey", "Primary Key");
+                putUserData.put("LastSubDay", currentDate);
+                putUserData.put("LastLogin", currentDate);
+
+                dbHelper = new DatabaseHelper(getActivity());
+                dbHelper.insertUserData(putUserData);
+                dbHelper.close();
+
+                if (getActivity() != null) {
+                    getActivity().finish();
+                }
+            }
+            if (subscribed) {
+                hasFunctionExecuted = true;
+            }
+        }
+    }
     private void loadUserImage(){
         String imagePath = (String) userData.get("imageUri");
 
@@ -275,6 +326,40 @@ public class HomeFragment extends Fragment {
         dbHelper = new DatabaseHelper(getContext());
         data = dbHelper.getASpecificDay(currentDate);
         dbHelper.close();
+    }
+
+    private boolean checkSub() {
+        final boolean[] isAuthenticated = {false};
+
+        CountDownLatch latch = new CountDownLatch(1);
+        String deviceid = DeviceUtil.getDeviceId(getActivity());
+        LoginRequest loginRequest = new LoginRequest();
+
+        // Start a new thread for the login request
+        new Thread(() -> {
+            try {
+                Map<String, Object> response = loginRequest.checkLoginStatus(deviceid);
+                System.out.println("Response: " + response);
+
+                if (response != null && "Subscription expired".equals(response.get("status"))) {
+                    isAuthenticated[0] = true;
+                } else if (response != null && "Subscription Not expired".equals(response.get("status"))) {
+                    subscribed = true;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                latch.countDown();
+            }
+        }).start();
+
+        try {
+            latch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return isAuthenticated[0];
     }
 
 }

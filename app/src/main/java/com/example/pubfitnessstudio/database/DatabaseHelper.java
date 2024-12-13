@@ -17,7 +17,7 @@ import java.util.Map;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "fitness_db";
-    private static final int DATABASE_VERSION = 14;
+    private static final int DATABASE_VERSION = 15;
 
     // Meal Table
     public static final String TABLE_MEAL = "meal_table";
@@ -82,7 +82,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     "adminUser TEXT DEFAULT 'PubFitAdmin', " +
                     "adminPassword TEXT DEFAULT 'SecretAdminPassword', " +
                     "LastLogin TEXT, " +
-                    "AvailableDays REAL, " +
+                    "LastSubDay TEXT, " +
                     "DOB TEXT, " +
                     "height REAL, " +
                     "weight REAL, " +
@@ -112,7 +112,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     "adminUser, " +
                     "adminPassword, " +
                     "LastLogin, " +
-                    "AvailableDays, " +
+                    "LastSubDay, " +
                     "DOB, " +
                     "height, " +
                     "weight, " +
@@ -128,7 +128,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     "'PubFitAdmin', " +   // adminUser (default)
                     "'SecretAdminPassword', " +   // adminPassword (default)
                     "'2020-01-01', " +   // LastLogin (use the current date or placeholder)
-                    "0.0, " +
+                    "'2020-01-01', " +
                     "'2000-01-01', " +   // DOB (example date)
                     "0.0, " +   // height (example)
                     "0.0, " +   // weight (example)
@@ -282,7 +282,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     mealData.put("totalProteins", String.format("%.1f", cursor.getDouble(cursor.getColumnIndex(COLUMN_TOTAL_PROTEINS))));
                     mealData.put("totalFats", String.format("%.1f", cursor.getDouble(cursor.getColumnIndex(COLUMN_TOTAL_FATS))));
 
-                    printData(mealData);
+//                    printData(mealData);
                     mealDataList.add(mealData);
                 }
                 Log.d("DatabaseHelper", "Data retried from Meals table");
@@ -318,7 +318,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     waterData.put("date", cursor.getString(cursor.getColumnIndex(COLUMN_WATER_DATE)));
                     waterData.put("water", String.format("%.1f", cursor.getDouble(cursor.getColumnIndex(COLUMN_WATER))));
 
-                    printData(waterData);
+//                    printData(waterData);
                     waterDataList.add(waterData);
                 }
                 Log.d("DatabaseHelper", "Data retried from Water table");
@@ -356,7 +356,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     bmiData.put("weight", String.format("%.1f", cursor.getDouble(cursor.getColumnIndex(COLUMN_WEIGHT))));
                     bmiData.put("bmi", String.format("%.1f", cursor.getDouble(cursor.getColumnIndex(COLUMN_BMI))));
 
-                    printData(bmiData);
+//                    printData(bmiData);
                     bmiDataList.add(bmiData);
                 }
                 Log.d("DatabaseHelper", "Data retried from BMI table");
@@ -411,7 +411,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 userData.put("adminUser", cursor.getString(cursor.getColumnIndex("adminUser")));
                 userData.put("adminPassword", cursor.getString(cursor.getColumnIndex("adminPassword")));
                 userData.put("LastLogin", cursor.getString(cursor.getColumnIndex("LastLogin")));
-                userData.put("AvailableDays", cursor.getDouble(cursor.getColumnIndex("AvailableDays")));
+                userData.put("LastSubDay", cursor.getString(cursor.getColumnIndex("LastSubDay")));
                 userData.put("DOB", cursor.getString(cursor.getColumnIndex("DOB")));
                 userData.put("height", cursor.getDouble(cursor.getColumnIndex("height")));
                 userData.put("weight", cursor.getDouble(cursor.getColumnIndex("weight")));
@@ -433,7 +433,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // Return the user data
         return userData;
     }
-
 
     @SuppressLint("Range")
     public Map<String, String> getASpecificDay(String date){

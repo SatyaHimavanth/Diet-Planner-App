@@ -1,14 +1,10 @@
 package com.example.pubfitnessstudio.ui.dashboard;
 
-import static com.example.pubfitnessstudio.R.id.bmisLayout;
-
-import static java.lang.Integer.parseInt;
 
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,18 +19,18 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-
 import com.example.pubfitnessstudio.R;
 import com.example.pubfitnessstudio.database.DatabaseHelper;
 import com.example.pubfitnessstudio.database.FoodItem;
 import com.example.pubfitnessstudio.database.FoodItemsLoader;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -42,7 +38,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -56,22 +51,24 @@ public class DashboardFragment extends Fragment {
     private final Map<String, List<FoodItem>> selectedMealItems = new HashMap<>();
 
     double liters = 0;
-
-    HashMap<String, Double> bmiData = new HashMap<>();
-    private EditText weightEditText;
-    private EditText heightEditText;
-    private LinearLayout bmisLayout;
-
+    private LinearLayout reportLayout;
     private Spinner spinnerGender, spinnerActivity, spinnerAdjustment;
     private EditText etWeight, etHeight, etAge;
     private TextView tvResult;
     private Button btnCalculate;
+    private DatabaseHelper dbHelper;
+    private HashMap<String, Object> userData;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_dashboard, container, false);
+
+        dbHelper = new DatabaseHelper(getContext());
+        userData = dbHelper.getUserData();
+        dbHelper.close();
 
         executorService = Executors.newSingleThreadExecutor();
 
@@ -93,6 +90,15 @@ public class DashboardFragment extends Fragment {
         selectedMealItems.put("Snacks", new ArrayList<>());
         selectedMealItems.put("Dinner", new ArrayList<>());
 
+        // Check if food items are already loaded in the Singleton
+        foodItems = FoodItemsManager.getInstance().getFoodItems();
+
+        // If not loaded, load food items from source (e.g., Excel or database)
+        if (foodItems == null) {
+            foodItems = FoodItemsLoader.loadFoodItems(getContext()); // Load from Excel or DB
+            FoodItemsManager.getInstance().setFoodItems(foodItems); // Store them in the Singleton
+        }
+
         // Load food items
         foodItems = FoodItemsLoader.loadFoodItems(getContext());
         List<String> foodNames = new ArrayList<>();
@@ -103,15 +109,6 @@ public class DashboardFragment extends Fragment {
         setupMealAutoComplete("Lunch", rootView.findViewById(R.id.lunch_input), foodNames);
         setupMealAutoComplete("Snacks", rootView.findViewById(R.id.snacks_input), foodNames);
         setupMealAutoComplete("Dinner", rootView.findViewById(R.id.dinner_input), foodNames);
-
-        // Listen for food data from MainActivity and ViewModel
-//        DashboardViewModel viewModel = new ViewModelProvider(requireActivity()).get(DashboardViewModel.class);
-//        viewModel.getFoodNames().observe(getViewLifecycleOwner(), foodNames -> {
-//            setupMealAutoComplete("Breakfast", rootView.findViewById(R.id.breakfast_input), foodNames);
-//            setupMealAutoComplete("Lunch", rootView.findViewById(R.id.lunch_input), foodNames);
-//            setupMealAutoComplete("Snacks", rootView.findViewById(R.id.snacks_input), foodNames);
-//            setupMealAutoComplete("Dinner", rootView.findViewById(R.id.dinner_input), foodNames);
-//        });
 
         // Submit button
         Button submitMealButton = rootView.findViewById(R.id.submit_button);
@@ -155,26 +152,103 @@ public class DashboardFragment extends Fragment {
 
         });
 
+        // Report
+        TextView bmi = rootView.findViewById(R.id.bmi);
+        TextView bmr = rootView.findViewById(R.id.bmr);
+        TextView fp = rootView.findViewById(R.id.fp);
+        TextView tbw = rootView.findViewById(R.id.tbw);
+        TextView pm = rootView.findViewById(R.id.pm);
+        TextView bmc = rootView.findViewById(R.id.bcm);
+        reportLayout = rootView.findViewById(R.id.reportLayout);
 
-        // Initialize views
-        weightEditText = rootView.findViewById(R.id.weight);
-        heightEditText = rootView.findViewById(R.id.height);
-        bmisLayout = rootView.findViewById(R.id.bmisLayout);
-        Button submitBMIButton = rootView.findViewById(R.id.form_submit_button);
+        // Male, Female
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate currentDate = LocalDate.now();
+        String userDOB = (String) userData.get("DOB");
+        if (userDOB == null || userDOB.isEmpty()){
+            userDOB = currentDate.toString();
+        }
+        LocalDate dob = LocalDate.parse(userDOB, formatter);
 
-        // Set the submit button onClick listener
-        submitBMIButton.setOnClickListener(v -> saveData());
+        double age = Period.between(dob, currentDate).getYears();
+
+        double height = (Double) userData.get("height");
+        double weight = (Double) userData.get("weight");
+        String gender = (String) userData.get("gender");
+
+        if(height==0 || weight==0 || gender==null || gender.isEmpty()){
+            reportLayout.removeAllViews();
+
+            // Create a new TextView for displaying the BMI
+            TextView reportTextView = new TextView(getContext());
+            reportTextView.setText("Please fill your details in Profile to see the report result");
+            reportTextView.setTextSize(18);
+            reportTextView.setPadding(8, 8, 8, 8);
+
+            // Add the BMI TextView to the layout
+            reportLayout.addView(reportTextView);
+        } else {
+            double BMI_value, TBW_value, BMC_value;
+            double BMR_value, FAT_value, PM_value;
+
+            BMI_value = (weight*2.20462*703)/(height*height*0.393701*0.393701);
+            BMI_value = weight/(height*height/10000);
+
+            try {
+                String currentDateStr = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+                // Initialize database helper
+                databaseHelper = new DatabaseHelper(getContext());
+                databaseHelper.insertBMI(currentDateStr, height, weight, BMI_value);
+                databaseHelper.close();
+                bmi.setText(String.format("%.2f kg/M2", BMI_value));
+            } catch (Exception e){
+                Toast.makeText(getContext(), "Error in saving BMI data", Toast.LENGTH_SHORT).show();
+            }
+
+            TBW_value = 0.6 * weight;
+            BMC_value = 0.04 * weight;
+
+            // online
+            TBW_value = 2.447 - (0.09145 * age) + (0.1074 * height) + (0.3362 * weight);
+//            BMC_value = ;
+
+            tbw.setText(String.format("%.2f L", TBW_value));
+            bmc.setText(String.format("%.2f kg", BMC_value));
+
+            if(gender.equals("Male")){
+                BMR_value = (10*weight) + (6.25*height) - (5*age) + 5;
+                FAT_value = (1.2*BMI_value) + (0.23*age) - 10.8 - 5.4;
+                PM_value = 0.2 * (weight * (1 - FAT_value/100));
+
+                // online
+                BMR_value = 88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age);
+
+
+            } else {
+                BMR_value = (10*weight) + (6.25*height) - (5*age) - 161;
+                FAT_value = (1.2*BMI_value) + (0.23*age) - 5.4;
+                PM_value = 0.2 * (weight * (1 - FAT_value/100));
+
+                // online
+                BMR_value = 447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age);
+            }
+
+            bmr.setText(String.format("%.2f Kcal/day", BMR_value));
+            fp.setText(String.format("%.2f %%", FAT_value));
+            pm.setText(String.format("%.2f kg", PM_value));
+        }
+
 
         // Load BMI Scale from asserts
-        try {
-            InputStream inputStream = requireContext().getAssets().open("bmi scale.jpg");
-            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-            ImageView bmiScale = rootView.findViewById(R.id.bmi_scale);
-            bmiScale.setImageBitmap(bitmap);
-            inputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            InputStream inputStream = requireContext().getAssets().open("bmi scale.jpg");
+//            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+//            ImageView bmiScale = rootView.findViewById(R.id.bmi_scale);
+//            bmiScale.setImageBitmap(bitmap);
+//            inputStream.close();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
         // BMR
         // Initialize views
@@ -190,6 +264,7 @@ public class DashboardFragment extends Fragment {
         btnCalculate.setOnClickListener(v -> {
             calculateCalories();
         });
+
         return rootView;
     }
 
@@ -339,65 +414,6 @@ public class DashboardFragment extends Fragment {
         return items.length() > 0 ? items.substring(0, items.length() - 2) : ""; // Remove trailing comma
     }
 
-    private void calculateAndDisplayBMI() {
-
-        String heightStr = heightEditText.getText().toString();
-        String weightStr = weightEditText.getText().toString();
-
-        // Validate the inputs
-        if (TextUtils.isEmpty(weightStr) || TextUtils.isEmpty(heightStr)) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(getActivity(), "Please enter both weight and height.", Toast.LENGTH_SHORT).show();
-                }
-            });
-//            Toast.makeText(getContext(), "Please enter both weight and height.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        // Parse weight and height
-        double height = Double.parseDouble(heightStr);
-        double weight = Double.parseDouble(weightStr);
-        // Calculate BMI
-        double bmi = (weight*2.20462*703)/(height*height*0.393701*0.393701);
-
-        bmiData.put("height", height);
-        bmiData.put("weight", weight);
-        bmiData.put("bmi", bmi);
-        displayBMI();
-    }
-
-    private void displayBMI() {
-        // Clear any previous BMI results
-        bmisLayout.removeAllViews();
-
-        // Create a new TextView for displaying the BMI
-        TextView bmiTextView = new TextView(getContext());
-        bmiTextView.setText(String.format("Your BMI is: %.2f", bmiData.get("bmi")));
-        bmiTextView.setTextSize(18);
-        bmiTextView.setPadding(8, 8, 8, 8);
-
-        // Add the BMI TextView to the layout
-        bmisLayout.addView(bmiTextView);
-    }
-
-    private void saveData() {
-        calculateAndDisplayBMI();
-        executorService.submit(() -> {
-            String currentDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
-            // Initialize database helper
-            databaseHelper = new DatabaseHelper(getContext());
-            databaseHelper.insertBMI(currentDate, bmiData.get("height"), bmiData.get("weight"), bmiData.get("bmi"));
-            databaseHelper.close();
-        });
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(getActivity(), "BMI data saved successfully!", Toast.LENGTH_SHORT).show();
-            }
-        });
-//        Toast.makeText(getContext(), "BMI data saved successfully!", Toast.LENGTH_SHORT).show();
-    }
 
     private void calculateCalories() {
         try {
@@ -407,7 +423,6 @@ public class DashboardFragment extends Fragment {
             int age = Integer.parseInt(etAge.getText().toString());
             double activityFactor = getActivityFactor(spinnerActivity.getSelectedItemPosition());
             double adjustmentFactor = getAdjustmentFactor(spinnerAdjustment.getSelectedItemPosition());
-
 
             double bmr;
             if (gender.equals("Male")) {

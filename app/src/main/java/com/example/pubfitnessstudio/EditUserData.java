@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -16,6 +17,7 @@ import android.content.ContentResolver;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.widget.Spinner;
 import android.widget.Toast;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -50,6 +52,7 @@ public class EditUserData extends AppCompatActivity {
     private File savedImageFile;
     private Button updateUserDetails;
 
+    private Spinner spinnerGender;
     private EditText currentPassword;
     private EditText updatePassword;
     private EditText re_updatePassword;
@@ -67,6 +70,7 @@ public class EditUserData extends AppCompatActivity {
 
         // Initialize Views
         userName = findViewById(R.id.etName);
+        spinnerGender = findViewById(R.id.spinner_gender);
         userHeight = findViewById(R.id.userHeight);
         userWeight = findViewById(R.id.userWeight);
         userDOB = findViewById(R.id.userDOB);
@@ -98,17 +102,20 @@ public class EditUserData extends AppCompatActivity {
         updateUserDetails = findViewById(R.id.btnSave);
         updateUserDetails.setOnClickListener(v -> {
             String name = userName.getText().toString().trim();
+            String gender = spinnerGender.getSelectedItem().toString();
+            System.out.println(gender);
             String height = userHeight.getText().toString().trim();
             String weight = userWeight.getText().toString().trim();
             String dob = userDOB.getText().toString().trim();
 
-            if (name.isEmpty() || height.isEmpty() || weight.isEmpty() || dob.isEmpty()) {
+            if (name.isEmpty() || gender.isEmpty() || height.isEmpty() || weight.isEmpty() || dob.isEmpty()) {
                 Toast.makeText(getApplicationContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
             } else {
 
                 putUserData = new HashMap<>();
                 putUserData.put("primarykey", "Primary Key");
                 putUserData.put("username", name);
+                putUserData.put("gender", gender);
                 putUserData.put("height", Double.parseDouble(height));
                 putUserData.put("weight", Double.parseDouble(weight));
                 putUserData.put("DOB", dob);
@@ -146,50 +153,50 @@ public class EditUserData extends AppCompatActivity {
         }));
 
         // password update
-        currentPassword = findViewById(R.id.current_password);
-        updatePassword = findViewById(R.id.new_password);
-        re_updatePassword = findViewById(R.id.re_new_password);
-        passwordUpdateButton = findViewById(R.id.update_password);
-
-        passwordUpdateButton.setOnClickListener(v -> {
-            Log.d("EditUserData", "Password update button clicker");
-
-            String old_pass = currentPassword.getText().toString().trim();
-            String new_pass = updatePassword.getText().toString().trim();
-            String re_new_pass = re_updatePassword.getText().toString().trim();
-            String old_saved_pass = (String) userData.get("password");
-            String admin_pass = (String) userData.get("adminPassword");
-
-            Log.d("EditUserData", old_saved_pass + " " + old_pass + " " + new_pass + " " + re_new_pass);
-
-            if (old_pass.isEmpty() || new_pass.isEmpty() || re_new_pass.isEmpty()){
-                Toast.makeText(getApplicationContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
-            } else {
-                if (old_pass.equals(old_saved_pass) || old_pass.equals(admin_pass)){
-                    if(re_new_pass.equals(new_pass)){
-                        putUserData = new HashMap<>();
-                        putUserData.put("primarykey", "Primary Key");
-                        putUserData.put("password", new_pass);
-
-                        // Call the method to insert data
-                        dbHelper = new DatabaseHelper(getApplicationContext());
-                        dbHelper.insertUserData(putUserData);
-                        dbHelper.close();
-
-                        Toast.makeText(getApplicationContext(), "Password updated successful", Toast.LENGTH_SHORT).show();
-                        currentPassword.setText("");
-                        updatePassword.setText("");
-                        re_updatePassword.setText("");
-                    } else {
-                        Log.d("EditUserData", "update passwords mismatch" + new_pass + "!=" + re_new_pass);
-                        Toast.makeText(getApplicationContext(), "update passwords mismatch", Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Log.d("EditUserData", "Old password did not match" + old_pass + "!=" + old_saved_pass);
-                    Toast.makeText(getApplicationContext(), "old password doesn't match", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+//        currentPassword = findViewById(R.id.current_password);
+//        updatePassword = findViewById(R.id.new_password);
+//        re_updatePassword = findViewById(R.id.re_new_password);
+//        passwordUpdateButton = findViewById(R.id.update_password);
+//
+//        passwordUpdateButton.setOnClickListener(v -> {
+//            Log.d("EditUserData", "Password update button clicker");
+//
+//            String old_pass = currentPassword.getText().toString().trim();
+//            String new_pass = updatePassword.getText().toString().trim();
+//            String re_new_pass = re_updatePassword.getText().toString().trim();
+//            String old_saved_pass = (String) userData.get("password");
+//            String admin_pass = (String) userData.get("adminPassword");
+//
+//            Log.d("EditUserData", old_saved_pass + " " + old_pass + " " + new_pass + " " + re_new_pass);
+//
+//            if (old_pass.isEmpty() || new_pass.isEmpty() || re_new_pass.isEmpty()){
+//                Toast.makeText(getApplicationContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
+//            } else {
+//                if (old_pass.equals(old_saved_pass) || old_pass.equals(admin_pass)){
+//                    if(re_new_pass.equals(new_pass)){
+//                        putUserData = new HashMap<>();
+//                        putUserData.put("primarykey", "Primary Key");
+//                        putUserData.put("password", new_pass);
+//
+//                        // Call the method to insert data
+//                        dbHelper = new DatabaseHelper(getApplicationContext());
+//                        dbHelper.insertUserData(putUserData);
+//                        dbHelper.close();
+//
+//                        Toast.makeText(getApplicationContext(), "Password updated successful", Toast.LENGTH_SHORT).show();
+//                        currentPassword.setText("");
+//                        updatePassword.setText("");
+//                        re_updatePassword.setText("");
+//                    } else {
+//                        Log.d("EditUserData", "update passwords mismatch" + new_pass + "!=" + re_new_pass);
+//                        Toast.makeText(getApplicationContext(), "update passwords mismatch", Toast.LENGTH_SHORT).show();
+//                    }
+//                } else {
+//                    Log.d("EditUserData", "Old password did not match" + old_pass + "!=" + old_saved_pass);
+//                    Toast.makeText(getApplicationContext(), "old password doesn't match", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
     }
 
     // Handle image selection result

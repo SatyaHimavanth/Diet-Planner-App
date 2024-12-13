@@ -19,10 +19,12 @@
         <GridLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:rowCount="5"
+            android:rowCount="6"
             android:columnCount="2"
-            android:layout_marginBottom="16dp">
+            android:layout_marginBottom="16dp"
+            android:padding="16dp">
 
+            <!-- Name -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -30,7 +32,8 @@
                 android:layout_row="0"
                 android:layout_column="0"
                 android:textSize="16sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"/>
 
             <EditText
                 android:id="@+id/etName"
@@ -38,84 +41,120 @@
                 android:layout_height="wrap_content"
                 android:layout_row="0"
                 android:layout_column="1"
+                android:layout_columnWeight="1"
                 android:hint="Enter your name"
                 android:layout_marginLeft="20dp"
-                android:layout_columnWeight="1"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName"
+                android:layout_marginBottom="16dp"/>
 
+            <!-- Gender -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Gender "
+                android:layout_row="1"
+                android:layout_column="0"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"/>
+
+            <Spinner
+                android:id="@+id/spinner_gender"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_row="1"
+                android:layout_column="1"
+                android:layout_columnWeight="1"
+                android:layout_marginLeft="20dp"
+                android:entries="@array/gender_array"
+                android:prompt="@string/select_gender"
+                android:layout_marginBottom="16dp"/>
+
+            <!-- Height -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Height "
-                android:layout_row="1"
+                android:layout_row="2"
                 android:layout_column="0"
                 android:textSize="16sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"/>
 
             <EditText
                 android:id="@+id/userHeight"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_row="1"
+                android:layout_row="2"
                 android:layout_column="1"
+                android:layout_columnWeight="1"
                 android:hint="Height in cm"
                 android:layout_marginLeft="20dp"
-                android:layout_columnWeight="1"
-                android:inputType="number" />
+                android:inputType="numberDecimal"
+                android:layout_marginBottom="16dp"/>
 
+            <!-- Weight -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Weight "
-                android:layout_row="2"
+                android:layout_row="3"
                 android:layout_column="0"
                 android:textSize="16sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"/>
 
             <EditText
                 android:id="@+id/userWeight"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_row="2"
+                android:layout_row="3"
                 android:layout_column="1"
+                android:layout_columnWeight="1"
                 android:hint="Weight in kg"
                 android:layout_marginLeft="20dp"
-                android:layout_columnWeight="1"
-                android:inputType="number" />
+                android:inputType="numberDecimal"
+                android:layout_marginBottom="16dp"/>
 
+            <!-- Date of Birth -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="DOB "
-                android:layout_row="3"
+                android:layout_row="4"
                 android:layout_column="0"
                 android:textSize="16sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"/>
 
             <EditText
                 android:id="@+id/userDOB"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:hint="DD/MM/YYYY"
-                android:layout_row="3"
+                android:layout_row="4"
                 android:layout_column="1"
-                android:layout_marginLeft="20dp"
                 android:layout_columnWeight="1"
-                android:inputType="date"
+                android:hint="DD/MM/YYYY"
                 android:focusable="false"
                 android:clickable="true"
-                android:padding="10dp" />
+                android:padding="10dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginBottom="16dp"/>
 
+            <!-- Save Button -->
             <Button
                 android:id="@+id/btnSave"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_row="4"
+                android:layout_row="5"
                 android:layout_columnSpan="2"
-                android:background="@drawable/rounded_button"
                 android:layout_gravity="center_horizontal"
-                android:text="Save" />
+                android:text="Save"
+                android:background="@drawable/rounded_button"
+                android:layout_marginTop="16dp"/>
+
         </GridLayout>
+
 
         <TextView
             android:layout_width="match_parent"
@@ -155,91 +194,91 @@
 
         </GridLayout>
 
-        <!-- Password -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Update Password"
-            android:textSize="30sp"
-            android:layout_marginTop="10dp"
-            android:textStyle="italic"
-            android:gravity="center_horizontal"/>
+<!--        &lt;!&ndash; Password &ndash;&gt;-->
+<!--        <TextView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Update Password"-->
+<!--            android:textSize="30sp"-->
+<!--            android:layout_marginTop="10dp"-->
+<!--            android:textStyle="italic"-->
+<!--            android:gravity="center_horizontal"/>-->
 
-        <GridLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:rowCount="4"
-            android:columnCount="2"
-            android:padding="10dp"
-            android:gravity="center">
+<!--        <GridLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:rowCount="4"-->
+<!--            android:columnCount="2"-->
+<!--            android:padding="10dp"-->
+<!--            android:gravity="center">-->
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Old Password "
-                android:layout_row="0"
-                android:layout_column="0"
-                android:textSize="16sp"
-                android:textStyle="bold"/>
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Old Password "-->
+<!--                android:layout_row="0"-->
+<!--                android:layout_column="0"-->
+<!--                android:textSize="16sp"-->
+<!--                android:textStyle="bold"/>-->
 
-            <EditText
-                android:id="@+id/current_password"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_row="0"
-                android:layout_column="1"
-                android:layout_marginStart="10dp"
-                android:layout_columnWeight="1"
-                android:hint="Ex: PubFit...."
-                android:inputType="textPassword" />
+<!--            <EditText-->
+<!--                android:id="@+id/current_password"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_row="0"-->
+<!--                android:layout_column="1"-->
+<!--                android:layout_marginStart="10dp"-->
+<!--                android:layout_columnWeight="1"-->
+<!--                android:hint="Ex: PubFit...."-->
+<!--                android:inputType="textPassword" />-->
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="New Password "
-                android:layout_row="1"
-                android:layout_column="0"
-                android:textSize="16sp"
-                android:textStyle="bold"/>
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="New Password "-->
+<!--                android:layout_row="1"-->
+<!--                android:layout_column="0"-->
+<!--                android:textSize="16sp"-->
+<!--                android:textStyle="bold"/>-->
 
-            <EditText
-                android:id="@+id/new_password"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_row="1"
-                android:layout_column="1"
-                android:layout_marginStart="10dp"
-                android:layout_columnWeight="1"
-                android:inputType="textPassword" />
+<!--            <EditText-->
+<!--                android:id="@+id/new_password"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_row="1"-->
+<!--                android:layout_column="1"-->
+<!--                android:layout_marginStart="10dp"-->
+<!--                android:layout_columnWeight="1"-->
+<!--                android:inputType="textPassword" />-->
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Re-New Password "
-                android:layout_row="2"
-                android:layout_column="0"
-                android:textSize="16sp"
-                android:textStyle="bold"/>
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Re-New Password "-->
+<!--                android:layout_row="2"-->
+<!--                android:layout_column="0"-->
+<!--                android:textSize="16sp"-->
+<!--                android:textStyle="bold"/>-->
 
-            <EditText
-                android:id="@+id/re_new_password"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_row="2"
-                android:layout_column="1"
-                android:layout_marginStart="10dp"
-                android:layout_columnWeight="1"
-                android:inputType="textPassword" />
+<!--            <EditText-->
+<!--                android:id="@+id/re_new_password"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_row="2"-->
+<!--                android:layout_column="1"-->
+<!--                android:layout_marginStart="10dp"-->
+<!--                android:layout_columnWeight="1"-->
+<!--                android:inputType="textPassword" />-->
 
-            <Button
-                android:id="@+id/update_password"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_row="3"
-                android:layout_columnSpan="2"
-                android:background="@drawable/rounded_button"
-                android:layout_gravity="center_horizontal"
-                android:text="Update" />
-        </GridLayout>
+<!--            <Button-->
+<!--                android:id="@+id/update_password"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_row="3"-->
+<!--                android:layout_columnSpan="2"-->
+<!--                android:background="@drawable/rounded_button"-->
+<!--                android:layout_gravity="center_horizontal"-->
+<!--                android:text="Update" />-->
+<!--        </GridLayout>-->
     </LinearLayout>
 </ScrollView>
